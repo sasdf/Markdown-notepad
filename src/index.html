@@ -1,0 +1,130 @@
+<!doctype html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.2/codemirror.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/markdown-it/6.0.0/markdown-it.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.2/codemirror.min.css">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.13.2/mode/markdown/markdown.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+        <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.2.0/highlight.min.js"></script>
+        <link rel="stylesheet" href="//codemirror.net/theme/icecoder.css">
+        <link rel="stylesheet" href="//codemirror.net/theme/ambiance-mobile.css">
+        <style>
+            html, body, .con, .CodeMirror, #output, #outputCon{
+                -webkit-box-sizing: border-box;
+                   -moz-box-sizing: border-box;
+                        box-sizing: border-box;
+            }
+            html, body{
+                margin: 0rem;
+                height: 100%;
+                width: 100%;
+                overflow: hidden;
+            }
+            .app{
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+            }
+            .header{
+                width: 100%;
+                height: 50px;
+                background-color: #1d1d1b;
+                transition: height .5s;
+                padding: 12.5px;
+                box-sizing: border-box;
+                text-align: center;
+            }
+            .btn{
+                display: inline-block;
+                color: #ddd;
+                transition: color .2s;
+            }
+            .btn:hover{
+                color: #aaa;
+            }
+            .btn:active{
+                color: #888;
+            }
+            .main{
+                width: 100%;
+                flex: 1;
+                display: flex;
+                flex-direction: row;
+            }
+            .editorContainer{
+                flex: 1 1 10cm;
+                box-sizing: border-box;
+                display: block;
+                overflow: hidden;
+            }
+            .outputContainer{
+                flex: 1 1 21cm;
+                box-sizing: border-box;
+                display: block;
+                overflow: hidden;
+                /*border-left: #777 solid 1px;*/
+            }
+            body{
+                padding: 0rem;
+            }
+            .CodeMirror{
+                display: block;
+                width: 100%;
+                height: 100%;
+            }
+            .CodeMirror-vscrollbar::-webkit-scrollbar {
+                -webkit-appearance: none;
+                width: 16px;
+                height: 16px;
+            }
+            .CodeMirror-vscrollbar::-webkit-scrollbar-corner {
+                background-color: #1d1d1b;
+            }
+            
+            .CodeMirror-vscrollbar::-webkit-scrollbar-thumb {
+                border-radius: 12px;
+                border: 4px solid rgba(255,255,255,0);
+                background-clip: content-box;
+                background-color: #A0A0A0;
+            }
+            #editor{
+                display: none;
+            }
+            #output{
+                border: none;
+                width: 100%;
+                height: 100%;
+                display: inline-block;
+            }
+            @media screen and (max-width: 20cm) {
+                .main{
+                    flex-direction: column;
+                }
+                .editorContainer{
+                    flex: 1;
+                }
+                .outputContainer{
+                    flex: 1;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="app">
+            <div class="header">
+                <span class="btn" id="printbtn"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="25px" height="25px" viewBox="0 0 510 510" style="enable-background:new 0 0 510 510;" xml:space="preserve"><path d="M433.5,153h-357C33.15,153,0,186.15,0,229.5v153h102v102h306v-102h102v-153C510,186.15,476.85,153,433.5,153z M357,433.5    H153V306h204V433.5z M433.5,255c-15.3,0-25.5-10.2-25.5-25.5s10.2-25.5,25.5-25.5s25.5,10.2,25.5,25.5S448.8,255,433.5,255z     M408,25.5H102v102h306V25.5z" fill="currentColor"></path></svg></span>
+            </div>
+            <div class="main">
+                <div class="editorContainer">
+                    <textarea id="editor"># Hello World</textarea>
+                </div>
+                <div class="outputContainer">
+                    <iframe id="output"></iframe>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
