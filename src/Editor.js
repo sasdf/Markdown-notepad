@@ -1,3 +1,4 @@
+/* global mermaidAPI */
 var markdownIt = require('markdown-it')
 
 function Editor(editorDOM, iframeDOM, templateURL){
@@ -34,7 +35,55 @@ function Editor(editorDOM, iframeDOM, templateURL){
     });
     this.md.use(require('markdown-it-katex'))
           // .use(require('markdown-it-attrs'))
-           .use(require('./classElement.js'))
+           .use(require('./classElement.js'));
+    
+    (function(){
+        var graphid = 0;
+        var defaultRender = _this.md.renderer.rules.fence;
+        var cache = []
+        
+        _this.md.renderer.rules.fence = function (tokens, idx, options, env, self) {
+        var token = tokens[idx];
+        if(token.info === "graph") {
+            var cacheMax = tokens.reduce((l, e)=>l+(e.info == 'graph'?1:0), 0) * 2
+            var hash = Array.apply(null, {length: token.content.length})
+                            .map(Number.call, Number)
+                            .map(token.content.charCodeAt, token.content)
+                            .reduce((l,e)=>(((l<<5)+e)+4294967296)%4294967296)
+            for(var i=0;i<cache.length;++i){
+                if(cache[i].hash === hash && cache[i].content.length === token.content.length && cache[i].content === token.content){
+                    break;
+                }
+            }
+            if(i < cache.length){
+                var c = cache[i]
+                if(i !== cache.length -1){
+                    cache.splice(i, 1)
+                    cache.push(c)
+                }
+                return c.result
+            }else{
+                var res = '';
+                try{
+                    mermaidAPI.render('mermaid_graph_'+(graphid++), token.content, function(s){
+                        res = s
+                    });
+                }catch(e){}
+                res = '<div>'+res.replace(/height="100%"/, '')+'</div>'
+                cache.push({
+                    hash: hash,
+                    content: token.content,
+                    result: res
+                })
+                if(cache.length > cacheMax) cache.shift()
+                return res
+            }
+        }
+        
+        // pass token to default renderer.
+        return defaultRender(tokens, idx, options, env, self);
+        };
+    })()
     
     //
     // Inject line numbers for sync scroll. Notes:

@@ -1,12 +1,13 @@
 var path = require('path')
 var webpack = require('webpack')
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 var webpackConfig = {
     entry: {
         index: path.join(__dirname, 'src/index.js'),
     },
     output: {
-        path: 'docs/asset',
+        path: path.join(__dirname, 'docs/asset'),
         filename: 'index.js'
     },
     plugins: [
@@ -25,6 +26,13 @@ var webpackConfig = {
             filename: 'template.html',
             chunks: []
         }),
+        new CopyWebpackPlugin([{
+            from: "src/font",
+            to: "font"
+        },{
+            from: "src/CNAME",
+            to: "../"
+        }]),
     ],
     module:{
         loaders: [
